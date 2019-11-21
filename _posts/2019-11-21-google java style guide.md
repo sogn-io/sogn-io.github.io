@@ -1,7 +1,6 @@
 ---
 title: Google 자바 코딩 스타일 가이드
 tags: android java google
-published: false
 ---
 
 # 소개
@@ -254,7 +253,7 @@ Predicate<String> predicate = str ->
 
 연속된 라인이 여러줄일 경우 4칸 이상 원하는 만큼 들여쓰기한다. 일반적으로 두라인 이상이 문법적으로 수평적인 항목으로 시작한다면 동일한 들여쓰기 레벨을 적용한다.
 
-[수평 정렬]()에 관한 섹션에서 여러 토큰을 이전행과 정렬하기 위해 스페이스를 다양하게 쓰지 않는 것이 좋음을 보여준다.
+[수평 정렬](#수평-정렬은-필요하지-않음)에 관한 섹션에서 여러 토큰을 이전행과 정렬하기 위해 스페이스를 다양하게 쓰지 않는 것이 좋음을 보여준다.
 
 ## 공백(Whitespace)
 
@@ -298,7 +297,7 @@ Predicate<String> predicate = str ->
 
 위의 규칙은 라인의 시작 또는 끝의 추가 공백에는 적용하지 않고 코드 *내부* 공간에만 적용된다.
 
-### 수평 정렬: 필요하지 않음
+### 수평 정렬은 필요하지 않음
 
 **용어 정리:** *수평 정렬*이란 특정 토큰을 이전 행의 다른 토큰과 줄맞추기 위해 임의의 추가 스페이스를 입력하는 것을 말함
 
@@ -416,7 +415,7 @@ switch (input) {
 
 ### 어노테이션
 
-클래스, 메소드, 생성자에 적용되는 어노테이션은 도큐먼트 블록 바로 다음에 표시하며, 한줄에 하나의 어노테이션을 적는다. 어노테이션은 [줄 바꿈]()에 포함되지 않으므로 들여쓰기 하지 않는다.
+클래스, 메소드, 생성자에 적용되는 어노테이션은 도큐먼트 블록 바로 다음에 표시하며, 한줄에 하나의 어노테이션을 적는다. 어노테이션은 [줄 바꿈](#줄-바꿈)에 포함되지 않으므로 들여쓰기 하지 않는다.
 
 예제:
 ```java
@@ -492,7 +491,7 @@ public protected private abstract default static final transient volatile synchr
 
 ### 클래스 명
 
-클래스 명은 [UpperCamelCase]()로 작성한다.
+클래스 명은 [UpperCamelCase](#camel-case-정의)로 작성한다.
 
 클래스 명은 일반적으로 `Character`나 `ImmutableList` 같이 명사나 명사구를 사용한다. 인터페이스 명도 일반적으로 명사나 명사구를 사용하지만(`List`와 같이), 종종 형용사나 형용사구를 사용할 수도 있다(`Readable`과 같이).
 
@@ -502,10 +501,201 @@ public protected private abstract default static final transient volatile synchr
 
 ### 메소드 명
 
-메소드 명은 [lowerCamelCase]()로 작성한다.
+메소드 명은 [lowerCamelCase](#camel-case-정의)로 작성한다.
 
 메소드 명의 경우 일반적으로 `sendMessage`나 `stop`과 같이 동사나 동사구를 사용한다.
 
-JUnit 테스트 메소드의 경우 underscore로 이름의 논리적 컴포넌트를 분리하고 각 컴포넌트는 [lowerCamelCase]()로 작성한다. 한가지 일반적인 패턴은 `pop_emptyStack`과 같이 `<methodUnderTest>_<state>` 형태로 작성하는 것이지만 테스트 메소드를 이름을 정하는 정확한 방법은 없다.
+JUnit 테스트 메소드의 경우 underscore로 이름의 논리적 컴포넌트를 분리하고 각 컴포넌트는 [lowerCamelCase](#camel-case-정의)로 작성한다. 한가지 일반적인 패턴은 `pop_emptyStack`과 같이 *`<methodUnderTest>_<state>`* 형태로 작성하는 것이지만 테스트 메소드를 이름을 정하는 정확한 방법은 없다.
 
-### 
+### 상수 명
+
+상수명은 대문자와 단어사이의 underscore를 써서 `CONSTANT_CASE` 형태로 사용한다.
+
+상수는 불변하는 static final 필드이다. primitive, String, immutable 타입, immutable 타입의 immutable 콜렉션을 포함한다. 인스턴스의 상태에 따라 변하면 상수가 아니다. 예를 들면,
+
+```java
+// Constants
+static final int NUMBER = 5;
+static final ImmutableList<String> NAMES = ImmutableList.of("Ed", "Ann");
+static final ImmutableMap<String, Integer> AGES = ImmutableMap.of("Ed", 35, "Ann", 32);
+static final Joiner COMMA_JOINER = Joiner.on(','); // because Joiner is immutable
+static final SomeMutableType[] EMPTY_ARRAY = {};
+enum SomeEnum { ENUM_CONSTANT }
+
+// Not constants
+static String nonFinal = "non-final";
+final String nonStatic = "non-static";
+static final Set<String> mutableCollection = new HashSet<String>();
+static final ImmutableSet<SomeMutableType> mutableElements = ImmutableSet.of(mutable);
+static final ImmutableMap<String, SomeMutableType> mutableValues =
+    ImmutableMap.of("Ed", mutableInstance, "Ann", mutableInstance2);
+static final Logger logger = Logger.getLogger(MyClass.getName());
+static final String[] nonEmptyArray = {"these", "can", "change"};
+```
+
+이름은 일반적으로 명사나 명사구를 사용한다.
+
+### 상수가 아닌 필드 명
+
+(static을 포함한) 필드 명은 [lowerCamelCase](#camel-case-정의)를 사용한다.
+
+일반적으로 `computeValues`나 `index`와 같이 명사나 명사구를 사용한다.
+
+### 파라미터 명
+
+파라미터는 [lowerCamelCase](#camel-case-정의)로 작성한다.
+
+public 메소드에서 한글자 파라미터 명을 사용하는 것은 피한다.
+
+### 지역 변수 명
+
+지역 변수는 [lowerCamelCase](#camel-case-정의)로 작성한다.
+
+final 이고 불변이더라도 지역 변수는 상수처럼 취급하지 않으며, 상수처럼 작성하지 않는다.
+
+### 타입 변수 명
+
+타입 변수는 다음 두가지 스타일 중 하나를 따른다.
+
+* 대문자 한자, 추가적으로 숫자 하나까지 (`E`, `T`, `X`, `T2` 등)
+* [클래스에 사용되는 이름 형식](#클래스-명)에 대문자 `T` (예: `RequestT`, `FooBarT`)
+
+## Camel case 정의
+
+"IPv6"나 "iOS"와 같이 특별한 약어를 사용하는 경우에 영어 어구를 camel case로 바꾸기 위해 구글 스타일은 다음과 같은 규칙을 따른다.
+
+1. 아포스트로피를 지우고 plain ASCII로 변환한다. 예를 들어, "Müller's algorithm"은  "Muellers algorithm"으로 변환한다.
+2. 결과를 단어 단위로 공백으로 나눈다.
+  * *추천:* 단어가 이미 camel-case 형태로 구성되어있다면 그것 역시 구성 단위로 나눈다. (예를 들어, "AdWords"는 "ad words") "iOS"와 같은 단어는 camel case가 아니므로 이 경우 적용하지 않는다.
+3. (약어를 포함하여) 모두 소문자로 변환하고 첫 글자만 대문자화 한다.
+  * *upper camel case*의 경우 모든 단어에 적용하고,
+  * *lower camel case*의 경우 첫단어의 대문자화는 제외한다.
+4. 마지막으로 모든 단어를 하나의 식별자로 join 한다.
+
+다음의 예처럼 원래 단어의 대소문자는 거의 무시된다.
+
+| 문장 형식 | 변경 후 | 잘못된 예 |
+|-----------|---------|-----------|
+| "XML HTTP request" | `XmlHttpRequest` | XMLHTTPRequest |
+| "new customer ID" | `newCustomerId` | newCustomerID |
+| "inner stopwatch" | `innerStopwatch` | innerStopWatch |
+| "supports IPv6 on iOS | `supportsIpv6OnIos` | supportsIPv6OnIOS |
+| "YouTube importer" | `YouTubeImporter`<br>`YoutubeImporter`\* | |
+
+\* 허용하지만 권장하지 않음
+
+> **노트:** 일부 영단어의 경우 "nonempty"와 "non-empty" 처럼 모호하게 하이픈으로 구별되는 경우가 있는데, 이경우 `checkNonempty`와 `checkNonEmpty` 모두 허용한다.
+
+# 코딩 규칙
+
+## `@Override`는 항상 사용한다
+
+슈퍼 클래스로 부터 오버라이드된 클래스 메소드, 인터페이스 메소드는 항상 `@Override` 어노테이션을 붙인다.
+
+**예외:** 부모 메소드가 `@Deprecated` 된 경우 `@Override`를 생략할 수 있다.
+
+## Exception catch 를 무시하지 않는다
+
+아래 명시한 예외케이스를 제외하고는 exception catch 구문에서 아무 것도 하지 않으면 않된다. (일반적으로 로그메시지를 출력하던가, 동작불능 상태라면 `AssertionError`를 다시 던진다)
+
+catch 블록에서 아무 것도 하지 않는 것이 정말 정당하다면 이유를 주석으로 표시한다.
+
+```java
+try {
+  int i = Integer.parseInt(response);
+  return handleNumericResponse(i);
+} catch (NumberFormatException ok) {
+  // it's not numeric; that's fine, just continue
+}
+return handleTextResponse(response);
+```
+
+**예외:** 테스트 코드에서 의도한 exception일 경우 주석없이 파라미터를 `expected`로 사용할 수 있다. 
+
+```java
+try {
+  emptyStack.pop();
+  fail();
+} catch (NoSuchElementException expected) {
+}
+```
+
+## static 멤버의 경우 클래스를 사용한다
+
+static 클래스 멤버를 참조할 때는 클래스 명으로 참조하여야 한다.
+
+```java
+Foo aFoo = ...;
+Foo.aStaticMethod(); // good
+aFoo.aStaticMethod(); // bad
+somethingThatYieldsAFoo().aStaticMethod(); // very bad
+```
+
+## Finalizer는 사용하지 않는다
+
+`Object.finalize`를 오버라이드하는 케이스는 거의 없다.
+
+> **팁:** 하지마라, 꼭 해야겠다면 [Effective Java Item 7](http://books.google.com/books?isbn=8131726592) "Avoid Finalizers" 를 읽고 이해한 다음 절대로 하지마라.
+
+# Javadoc
+
+## 형식
+
+### General form
+
+Javadoc의 *일반적인* 형식은 다음과 같다.
+
+```java
+/**
+ * Multiple lines of Javadoc text are written here,
+ * wrapped normally...
+ */
+public int method(String p1) { ... }
+```
+
+또는, 다음과 같이 한줄로 쓸 수도 있다.
+
+```java
+/** An especially short bit of Javadoc. */
+```
+
+한줄로 적을 때로 전체적인 Javadoc 형식(comment marker 등)을 지켜야 하며, `@return`과 같은 block tag가 없을 경우에만 한줄로 적는다.
+
+### 단락(Paragraphs)
+
+한줄 띄우는 경우, 즉 하나의 asterisk(`*`)만 존재하는 라인은 단락 사이와 block tag 그룹 앞에 사용한다. 첫 단락을 제외한 단락은 첫단어 앞에 `<p>`로 시작한다. `<p>` 다음에 스페이스 없이 바로 내용이 시작된다.
+
+### Block tags
+
+block tag는 `@param`, `@return`, `@throws`, `@deprecated`의 순서로 작성하며 내용이 없을 경우 넣지 않는다. 내용을 한줄에 다 적지 못하는 경우 다음줄에 `@`로 부터 4칸 이상 들여쓰기 한다.
+
+## The summary fragment
+
+Javadoc 블록은 간단한 summary fragment로 시작한다. 이것은 클래스나 메소드를 설명하는 중요한 부분이다.
+
+이 fragment는 명사구나 동사구로 작성하며 완전한 문장 형태가 아니다. `A {@code Foo} is a...`나 `This method returns...`와 같이 시작하지 않고, `Save the record.`와 같이 명령형으로 적지 않는다. 하지만, 완벽한 문장처럼 대문자로 시작하고 문장부호를 표시한다.
+
+> **팁:** 일반적인 실수는 간단한 Javadoc을 `/** @return the customer ID */`과 같은 형태로 적는 것이다. 이것은 `/** Returns the customer ID. */`처럼 고쳐야 한다.
+
+## Javadoc은 어디에 적을까
+
+*최소한* 모든 public 클래스와 모든 public, protected 멤버에 있어야 하며, 몇가지 예외는 아래에 설명한다.
+
+아래 설명할 [필수가 아닌 Javadoc](#필수가-아닌-javadoc) 컨텐츠도 있을 수 있다.
+
+### 예외: self-explanatory methods
+
+`getFoo`와 같이 간단하고 명확한 경우, 실제로 "Returns the foo" 정도밖에 설명할게 없을 경우 생략가능하다.
+
+> **중요:** 예를 들어 `getCanonicalName`과 같은 메소드에서 `/** Returns the canonical name. */ 만으로 설명이 부족한 경우, 읽는 사람이 "canonical name"의 의미를 알지 못하는 경우에 Javadoc을 생략하는 것은 좋지 않다.
+
+### 예외: overrides
+
+슈퍼타입 메소드를 상속받은 메소드의 경우 Javadoc은 옵션이다.
+
+### 필수가 아닌 Javadoc
+
+코드 내 주석이 클래스 멤버의 전체 목적이나 동작방식을 설명하는데 사용된다면 Javadoc 형식으로 작성한다.(`/**`를 사용)
+
+이러한 Javadoc은 필수는 아니므로 위의 규칙을 엄격히 따를 필요는 없다.
+
