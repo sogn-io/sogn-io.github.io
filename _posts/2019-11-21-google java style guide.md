@@ -687,7 +687,7 @@ Javadoc 블록은 간단한 summary fragment로 시작한다. 이것은 클래�
 
 `getFoo`와 같이 간단하고 명확한 경우, 실제로 "Returns the foo" 정도밖에 설명할게 없을 경우 생략가능하다.
 
-> **중요:** 예를 들어 `getCanonicalName`과 같은 메소드에서 `/** Returns the canonical name. */ 만으로 설명이 부족한 경우, 읽는 사람이 "canonical name"의 의미를 알지 못하는 경우에 Javadoc을 생략하는 것은 좋지 않다.
+> **중요:** 예를 들어 `getCanonicalName`과 같은 메소드에서 `/** Returns the canonical name. */` 만으로 설명이 부족한 경우, 읽는 사람이 "canonical name"의 의미를 알지 못하는 경우에 Javadoc을 생략하는 것은 좋지 않다.
 
 #### 예외: overrides
 
